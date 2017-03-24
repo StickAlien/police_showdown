@@ -28,42 +28,54 @@ enemyShot.src = "resource/texture/gangster1shootscaled.png";
 
 
 //Variablen
-var anzeige, pen, tickFlag, lastTime, karl, intervalRain, intervalBasic;
+var anzeige, pen, stateRain, lastTime, karl, stateBack, intervalRain, switchFlag;
 
 
 //Funktionen
 function initialisieren(){
 	anzeige = document.getElementById("anzeige");
 	pen = anzeige.getContext("2d");
-	tickFlag = true;
+	stateRain = true;
+	switchFlag = true;
 	lastTime = 0;
+	stateBack = true;
 	intervalRain = 0;
-	intervalBasic = 0;
 	karl = new Gangster();
 	window.requestAnimationFrame(tick);
 }
 
-function basic(pause){
-	intervalBasic += pause;
-	if(intervalBasic>200){
-		intervalBasic = 0;
-		pen.clearRect(0,0,768,432);
-		pen.drawImage(background,0,0);
+function animate(pause){
+	intervalRain += pause;
+	karl.interval += pause;
+	if(intervalRain>=200){
+		intervalRain = 0;
+		stateRain = !stateRain;
+	}
+	
+	if(karl.interval>=750&&switchFlag){
+		karl.interval = 0;
+		karl.state = 2;
+		switchFlag = !switchFlag
+	}
+	else if(karl.interval>=750&&!switchFlag){
+		karl.interval = 0;
+		karl.state = 0;
+		switchFlag = !switchFlag;
 	}
 }
 
-function raining(pause){
-	intervalRain += pause;
-	if(intervalRain>200){
-		intervalRain = 0;
-		if(tickFlag){
-			tickFlag = false;
-			pen.drawImage(rain,0,0);
-		}
-		else{
-			tickFlag = true;
-			pen.drawImage(rainTwo,0,0);
-		}
+function basic(){
+	pen.clearRect(0,0,768,432);
+	switch(stateBack){
+		case true: pen.drawImage(background,0,0); break;
+		case false: pen.drawImage(backgroundTwo,0,0); break;
+	}
+}
+
+function raining(){
+	switch(stateRain){
+		case true: pen.drawImage(rain,0,0); break;
+		case false: pen.drawImage(rainTwo,0,0); break;
 	}
 }
 
@@ -72,9 +84,10 @@ function tick(){
 	var time = new Date();
 	var pause = time.getTime() - lastTime;
 	lastTime = time.getTime();
-	basic(pause);
-	karl.animateEnemy(pause);
-	raining(pause);
+	animate(pause);
+	basic();
+	karl.animateEnemy();
+	raining();
 	window.requestAnimationFrame(tick);
 }
 
