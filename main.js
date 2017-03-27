@@ -28,7 +28,7 @@ enemyShot.src = "resource/texture/gangster1shootscaled.png";
 
 
 //Variablen
-var anzeige, pen, stateRain, lastTime, karl, stateBack, intervalRain, switchFlag;
+var anzeige, pen, stateRain, lastTime, karl, stateBack, intervalRain, switchFlag, pause;
 
 
 //Funktionen
@@ -40,11 +40,12 @@ function initialisieren(){
 	lastTime = 0;
 	stateBack = true;
 	intervalRain = 0;
+	pause = 0;
 	karl = new Gangster();
 	window.requestAnimationFrame(tick);
 }
 
-function animate(pause){
+function animate(){
 	intervalRain += pause;
 	karl.interval += pause;
 	if(intervalRain>=200){
@@ -52,15 +53,17 @@ function animate(pause){
 		stateRain = !stateRain;
 	}
 	
-	if(karl.interval>=750&&switchFlag){
+	if(karl.interval>=750){
 		karl.interval = 0;
-		karl.state = 2;
+		if(karl.idle){
+			if(switchFlag){
+				karl.state = 0;
+			}
+			else{
+				karl.state = 2;
+			}
+		}
 		switchFlag = !switchFlag
-	}
-	else if(karl.interval>=750&&!switchFlag){
-		karl.interval = 0;
-		karl.state = 0;
-		switchFlag = !switchFlag;
 	}
 }
 
@@ -82,12 +85,13 @@ function raining(){
 
 function tick(){
 	var time = new Date();
-	var pause = time.getTime() - lastTime;
+	pause = time.getTime() - lastTime;
 	lastTime = time.getTime();
-	animate(pause);
+	animate();
 	basic();
 	karl.animateEnemy();
 	raining();
+	pause = 0;
 	window.requestAnimationFrame(tick);
 }
 
