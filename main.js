@@ -26,6 +26,13 @@ enemyMotion.src = "resource/texture/gangster1movescaled.png";
 var enemyShot = document.createElement("img");
 enemyShot.src = "resource/texture/gangster1shootscaled.png";
 
+//Sound laden
+var rainSound = document.createElement("audio");
+rainSound.src = "resource/sound/rain.wav";
+
+var drawSound = document.createElement("audio");
+drawSound.src = "resource/sound/gunDraw.wav";
+
 
 //Variablen
 var anzeige, pen, stateRain, lastTime, karl, stateBack, intervalRain, switchFlag, pause;
@@ -38,23 +45,27 @@ function initialisieren(){
 	stateRain = true;
 	switchFlag = true;
 	lastTime = 0;
-	stateBack = true;
+	stateBack = false;
 	intervalRain = 0;
 	pause = 0;
+	rainSound.loop = true;
+	rainSound.play();
 	karl = new Gangster();
 	window.requestAnimationFrame(tick);
 }
 
 function animate(){
 	intervalRain += pause;
-	karl.interval += pause;
+	if(karl.idle||karl.walk) karl.interval += pause;
+	if(karl.idle) karl.drawInterval += pause;
+	console.log(karl.drawInterval);
+	
 	if(intervalRain>=200){
 		intervalRain = 0;
 		stateRain = !stateRain;
 	}
 	
-	if(karl.interval>=750){
-		karl.interval = 0;
+	if(karl.interval>=500){
 		if(karl.idle){
 			if(switchFlag){
 				karl.state = 0;
@@ -62,9 +73,22 @@ function animate(){
 			else{
 				karl.state = 2;
 			}
+			karl.interval = 0;
+		}
+		else if(karl.walk){
+			if(switchFlag){
+				karl.state = 0;
+			}
+			else{
+				karl.state = 1;
+			}
 		}
 		switchFlag = !switchFlag
 	}
+}
+
+function toggleLight(){
+	stateBack = !stateBack;
 }
 
 function basic(){
@@ -91,6 +115,8 @@ function tick(){
 	basic();
 	karl.animateEnemy();
 	raining();
+	karl.walkEnemy();
+	karl.shootEnemy();
 	pause = 0;
 	window.requestAnimationFrame(tick);
 }
