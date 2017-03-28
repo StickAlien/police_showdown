@@ -26,6 +26,15 @@ enemyMotion.src = "resource/texture/gangster1movescaled.png";
 var enemyShot = document.createElement("img");
 enemyShot.src = "resource/texture/gangster1shootscaled.png";
 
+var bubbleFire = document.createElement("img");
+bubbleFire.src = "resource/texture/sprechblaseFire.png";
+
+var bubbleGameOver = document.createElement("img");
+bubbleGameOver.src = "resource/texture/sprechblaseGameOver.png";
+
+var bubbleYouWon = document.createElement("img");
+bubbleYouWon.src = "resource/texture/sprechblaseYouWon.png";
+
 //Sound laden
 var rainSound = document.createElement("audio");
 rainSound.src = "resource/sound/rain.wav";
@@ -114,6 +123,7 @@ function tick(){
 	animate();
 	basic();
 	karl.animateEnemy();
+	karl.talkEnemy();
 	raining();
 	karl.walkEnemy();
 	karl.shootEnemy();
