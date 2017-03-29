@@ -1,4 +1,5 @@
 function Gangster(){
+	//Variablen
 	posX = 0;
 	posY = 50;
 	this.state = 0; //Stadien 0 = normal; 1 = laufend; 2 = idle; 3 = schießen; 4 = besiegt
@@ -8,7 +9,9 @@ function Gangster(){
 	this.idle = false;
 	this.walk = true;
 	this.drawTime = Math.round(Math.random()*10000-1000);
-
+	
+	
+	//Funktionen
 	this.animateEnemy = function(){
 		switch(this.state){
 			case 0: pen.drawImage(enemy,posX,posY); break;

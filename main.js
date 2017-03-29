@@ -11,6 +11,9 @@ rain.src = "resource/texture/rainphase1scaled.png";
 var rainTwo = document.createElement("img");
 rainTwo.src = "resource/texture/rainphase2scaled.png";
 
+var crosshair = document.createElement("img");
+crosshair.src = "resource/texture/crosshairscaled.png";
+
 var enemy = document.createElement("img");
 enemy.src = "resource/texture/gangster1scaled.png";
 
@@ -48,14 +51,16 @@ drawSound.src = "resource/sound/gunDraw.wav";
 var anzeige, hudHead, hudFoot, pen;
 var lastTime, intervalRain, pause;
 var switchFlag, stateRain, stateBack;
-var karl;
-var score, reactionEnemy, reactionPlayer;
+var mouseX, mouseY;
+var karl, player;
+var score, guiScore, reactionEnemy, guiReactionEnemy, reactionPlayer, guiReactionPlayer;
 
 //Funktionen
 function initialisieren(){
 	anzeige = document.getElementById("anzeige");
 	hudFoot = document.getElementById("hudFoot");
 	hudHead = document.getElementById("hudHead");
+	anzeige.addEventListener("mousemove",getCoord);
 	pen = anzeige.getContext("2d");
 	
 	stateRain = true;
@@ -73,22 +78,23 @@ function initialisieren(){
 	rainSound.loop = true;
 	rainSound.play();
 	
-	var guiScore = document.createElement("div");
-	guiScore.innerHTML = score;
+	guiScore = document.createElement("div");
 	guiScore.className = "hudItem";
+	guiScore.innerHTML = "SCORE:"+score;
 	hudFoot.appendChild(guiScore);
 	
-	var guiReactionPlayer = document.createElement("div");
+	guiReactionPlayer = document.createElement("div");
 	guiReactionPlayer.className = "hudItem";
-	guiReactionPlayer.innerHTML = reactionPlayer/1000;
+	guiReactionPlayer.innerHTML = "YOUR TIME:"+reactionPlayer/1000;
 	hudHead.appendChild(guiReactionPlayer);
 	
-	var guiReactionEnemy = document.createElement("div");
+	guiReactionEnemy = document.createElement("div");
 	guiReactionEnemy.className = "hudItem";
-	guiReactionEnemy.innerHTML = reactionEnemy/1000;
+	guiReactionEnemy.innerHTML = "ENEMY TIME:"+reactionEnemy/1000;
 	hudHead.appendChild(guiReactionEnemy);
 	
 	karl = new Gangster();
+	otto = new Player();
 	
 	window.requestAnimationFrame(tick);
 }
@@ -125,6 +131,18 @@ function animate(){
 	}
 }
 
+function getCoord(e){
+	var abstandX = anzeige.offsetLeft;
+	var abstandY = anzeige.offsetTop;
+	mouseX = e.clientX-abstandX;
+	mouseY = e.clientY-abstandY;
+}
+
+function updateHud(){
+	guiScore.innerHTML = "SCORE:"+score;
+	guiReactionPlayer.innerHTML = "YOUR TIME:"+reactionPlayer/1000;
+}
+
 function toggleLight(){
 	stateBack = !stateBack;
 }
@@ -151,15 +169,19 @@ function tick(){
 	lastTime = time.getTime();
 	
 	animate();
+	otto.repoCross();
 	basic();
 	
 	karl.animateEnemy();
 	karl.talkEnemy();
 	
 	raining();
+	otto.drawCross();
 	
 	karl.walkEnemy();
 	karl.shootEnemy();
+	
+	updateHud();
 	
 	pause = 0;
 	
