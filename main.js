@@ -46,10 +46,13 @@ rainSound.src = "resource/sound/rain.wav";
 var drawSound = document.createElement("audio");
 drawSound.src = "resource/sound/gunDraw.wav";
 
+var shotSound = document.createElement("audio");
+//shotSound.src = "resource/sound/gunShot.wav";
+
 
 //Variablen
 var anzeige, hudHead, hudFoot, pen;
-var lastTime, intervalRain, pause;
+var lastTime, intervalRain, intervalUpdate, pause;
 var switchFlag, stateRain, stateBack;
 var mouseX, mouseY;
 var karl, player;
@@ -70,12 +73,14 @@ function initialisieren(){
 	pause = 0;
 	lastTime = 0;
 	intervalRain = 0;
+	intervalUpdate = 0;
 	
 	score = 0;
 	reactionEnemy = 1300;
 	reactionPlayer = 0;
 	
 	rainSound.loop = true;
+	rainSound.volume = 0.2;
 	rainSound.play();
 	
 	guiScore = document.createElement("div");
@@ -85,16 +90,16 @@ function initialisieren(){
 	
 	guiReactionPlayer = document.createElement("div");
 	guiReactionPlayer.className = "hudItem";
-	guiReactionPlayer.innerHTML = "YOUR TIME:"+reactionPlayer/1000;
+	guiReactionPlayer.innerHTML = "TIME:"+reactionPlayer/1000;
 	hudHead.appendChild(guiReactionPlayer);
 	
 	guiReactionEnemy = document.createElement("div");
 	guiReactionEnemy.className = "hudItem";
-	guiReactionEnemy.innerHTML = "ENEMY TIME:"+reactionEnemy/1000;
+	guiReactionEnemy.innerHTML = "GANGSTER:"+reactionEnemy/1000;
 	hudHead.appendChild(guiReactionEnemy);
 	
 	karl = new Gangster();
-	otto = new Player();
+	player = new Player();
 	
 	window.requestAnimationFrame(tick);
 }
@@ -139,8 +144,21 @@ function getCoord(e){
 }
 
 function updateHud(){
-	guiScore.innerHTML = "SCORE:"+score;
-	guiReactionPlayer.innerHTML = "YOUR TIME:"+reactionPlayer/1000;
+	intervalUpdate += pause;
+	if(intervalUpdate>=100){
+		guiScore.innerHTML = "SCORE:"+score;
+		guiReactionPlayer.innerHTML = "TIME:"+reactionPlayer/1000;
+		intervalUpdate = 0;
+	}
+}
+
+function reactionTimer(){
+	if(player.show){
+		reactionPlayer += pause;
+	}
+	if(reactionPlayer>=reactionEnemy){
+		karl.win();
+	}
 }
 
 function toggleLight(){
@@ -168,15 +186,17 @@ function tick(){
 	pause = time.getTime() - lastTime;
 	lastTime = time.getTime();
 	
+	//Ablauf aller Aufgaben
 	animate();
-	otto.repoCross();
+	reactionTimer();
+	player.repoCross();
 	basic();
 	
 	karl.animateEnemy();
 	karl.talkEnemy();
 	
 	raining();
-	otto.drawCross();
+	player.drawCross();
 	
 	karl.walkEnemy();
 	karl.shootEnemy();
@@ -189,5 +209,5 @@ function tick(){
 }
 
 
-//Programmablauf
+//Initialisierung
 initialisieren();

@@ -1,16 +1,19 @@
 function Player(){
 	//Variablen
-	posiX = mouseX-33;
-	posiY = mouseY-36;
+	var posX = mouseX-33;
+	var posY = mouseY-36;
+	this.show = false;
 	
 	
 	//Funktionen
 	this.repoCross = function(){
-		posiX = mouseX-40;
-		posiY = mouseY-40;
+		posX = mouseX-40;
+		posY = mouseY-40;
 	}
 	
 	this.drawCross = function(){
-		pen.drawImage(crosshair,posiX,posiY);
+		if(this.show){
+			pen.drawImage(crosshair,posX,posY);
+		}
 	}
 }
