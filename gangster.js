@@ -7,7 +7,7 @@ function Gangster(){
 	this.drawInterval = 0;
 	this.idle = false;
 	this.walk = true;
-	this.drawTime = Math.round(Math.random()*6000-1000);
+	this.drawTime = Math.round(Math.random()*10000-1000);
 
 	this.animateEnemy = function(){
 		switch(this.state){

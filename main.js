@@ -35,6 +35,7 @@ bubbleGameOver.src = "resource/texture/sprechblaseGameOver.png";
 var bubbleYouWon = document.createElement("img");
 bubbleYouWon.src = "resource/texture/sprechblaseYouWon.png";
 
+
 //Sound laden
 var rainSound = document.createElement("audio");
 rainSound.src = "resource/sound/rain.wav";
@@ -44,22 +45,51 @@ drawSound.src = "resource/sound/gunDraw.wav";
 
 
 //Variablen
-var anzeige, pen, stateRain, lastTime, karl, stateBack, intervalRain, switchFlag, pause;
-
+var anzeige, hudHead, hudFoot, pen;
+var lastTime, intervalRain, pause;
+var switchFlag, stateRain, stateBack;
+var karl;
+var score, reactionEnemy, reactionPlayer;
 
 //Funktionen
 function initialisieren(){
 	anzeige = document.getElementById("anzeige");
+	hudFoot = document.getElementById("hudFoot");
+	hudHead = document.getElementById("hudHead");
 	pen = anzeige.getContext("2d");
+	
 	stateRain = true;
 	switchFlag = true;
-	lastTime = 0;
 	stateBack = false;
-	intervalRain = 0;
+	
 	pause = 0;
+	lastTime = 0;
+	intervalRain = 0;
+	
+	score = 0;
+	reactionEnemy = 1300;
+	reactionPlayer = 0;
+	
 	rainSound.loop = true;
 	rainSound.play();
+	
+	var guiScore = document.createElement("div");
+	guiScore.innerHTML = score;
+	guiScore.className = "hudItem";
+	hudFoot.appendChild(guiScore);
+	
+	var guiReactionPlayer = document.createElement("div");
+	guiReactionPlayer.className = "hudItem";
+	guiReactionPlayer.innerHTML = reactionPlayer/1000;
+	hudHead.appendChild(guiReactionPlayer);
+	
+	var guiReactionEnemy = document.createElement("div");
+	guiReactionEnemy.className = "hudItem";
+	guiReactionEnemy.innerHTML = reactionEnemy/1000;
+	hudHead.appendChild(guiReactionEnemy);
+	
 	karl = new Gangster();
+	
 	window.requestAnimationFrame(tick);
 }
 
@@ -67,7 +97,6 @@ function animate(){
 	intervalRain += pause;
 	if(karl.idle||karl.walk) karl.interval += pause;
 	if(karl.idle) karl.drawInterval += pause;
-	console.log(karl.drawInterval);
 	
 	if(intervalRain>=200){
 		intervalRain = 0;
@@ -120,16 +149,23 @@ function tick(){
 	var time = new Date();
 	pause = time.getTime() - lastTime;
 	lastTime = time.getTime();
+	
 	animate();
 	basic();
+	
 	karl.animateEnemy();
 	karl.talkEnemy();
+	
 	raining();
+	
 	karl.walkEnemy();
 	karl.shootEnemy();
+	
 	pause = 0;
+	
 	window.requestAnimationFrame(tick);
 }
+
 
 //Programmablauf
 initialisieren();

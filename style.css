@@ -14,6 +14,29 @@ body{
 #anzeige{
 	display: block;
 	margin: 0 auto;
-	margin-top: 150px;
 	border: ridge 10px #565656;
+	cursor: none;
+}
+
+#hudHead{
+	display: flex;
+	justify-content: space-around;
+	height: 50px;
+	width: 788px;
+	margin: 0 auto;
+	margin-top: 100px;
+}
+
+#hudFoot{
+	display: flex;
+	justify-content: center;
+	height: 50px;
+	width: 788px;
+	margin: 0 auto;
+}
+
+.hudItem{
+	color: white;
+	font-family: pixel;
+	font-size: 3em;
 }
