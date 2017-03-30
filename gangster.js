@@ -18,14 +18,14 @@ function Gangster(){
 			case 1: pen.drawImage(enemyMotion,posX,posY); break;
 			case 2: pen.drawImage(enemyIdle,posX,posY); break;
 			case 3: pen.drawImage(enemyShot,posX,posY); break;
-			case 4: pen.drawImage(enemyDead,posX,posY); break;
+			case 4: pen.drawImage(enemyDead,posX-12,posY); break;
 		}
 	}
 	
 	this.talkEnemy = function(){
 		switch(this.talk){
 			case 1: pen.drawImage(bubbleFire,400,30); break;
-			case 2: pen.drawImage(bubbleGameOver,400,30); break;
+			case 2: pen.drawImage(bubbleGameOver,200,30); break;
 			case 3: pen.drawImage(bubbleYouWon,400,30); break;
 		}
 	}
@@ -53,8 +53,10 @@ function Gangster(){
 	}
 	
 	this.win = function(){
-		this.talk = 2;
-		//shotSound.play();
+		over = true;
 		player.show = false;
+		
+		this.talk = 2;
+		shotSound.play();
 	}
 }

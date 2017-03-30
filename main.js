@@ -47,28 +47,33 @@ var drawSound = document.createElement("audio");
 drawSound.src = "resource/sound/gunDraw.wav";
 
 var shotSound = document.createElement("audio");
-//shotSound.src = "resource/sound/gunShot.wav";
+shotSound.src = "resource/sound/gunShot.wav";
 
 
 //Variablen
 var anzeige, hudHead, hudFoot, pen;
 var lastTime, intervalRain, intervalUpdate, pause;
-var switchFlag, stateRain, stateBack;
+var switchFlag, stateRain, stateBack, over;
 var mouseX, mouseY;
 var karl, player;
 var score, guiScore, reactionEnemy, guiReactionEnemy, reactionPlayer, guiReactionPlayer;
 
 //Funktionen
 function initialisieren(){
+	karl = new Gangster();
+	player = new Player();
+	
 	anzeige = document.getElementById("anzeige");
 	hudFoot = document.getElementById("hudFoot");
 	hudHead = document.getElementById("hudHead");
 	anzeige.addEventListener("mousemove",getCoord);
+	anzeige.addEventListener("click",player.shoot);
 	pen = anzeige.getContext("2d");
 	
 	stateRain = true;
 	switchFlag = true;
 	stateBack = false;
+	over = false;
 	
 	pause = 0;
 	lastTime = 0;
@@ -76,7 +81,7 @@ function initialisieren(){
 	intervalUpdate = 0;
 	
 	score = 0;
-	reactionEnemy = 1300;
+	reactionEnemy = 2000;
 	reactionPlayer = 0;
 	
 	rainSound.loop = true;
@@ -95,11 +100,8 @@ function initialisieren(){
 	
 	guiReactionEnemy = document.createElement("div");
 	guiReactionEnemy.className = "hudItem";
-	guiReactionEnemy.innerHTML = "GANGSTER:"+reactionEnemy/1000;
+	guiReactionEnemy.innerHTML = "ENEMY:"+reactionEnemy/1000;
 	hudHead.appendChild(guiReactionEnemy);
-	
-	karl = new Gangster();
-	player = new Player();
 	
 	window.requestAnimationFrame(tick);
 }
@@ -153,10 +155,10 @@ function updateHud(){
 }
 
 function reactionTimer(){
-	if(player.show){
+	if(player.show&&!over){
 		reactionPlayer += pause;
 	}
-	if(reactionPlayer>=reactionEnemy){
+	if(reactionPlayer>=reactionEnemy&&!over){
 		karl.win();
 	}
 }
