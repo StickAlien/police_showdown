@@ -40,6 +40,9 @@ bubbleYouWon.src = "resource/texture/sprechblaseYouWon.png";
 
 
 //Sound laden
+var mainSong = document.createElement("audio");
+mainSong.src = "resource/sound/mainSong.mp3"
+
 var rainSound = document.createElement("audio");
 rainSound.src = "resource/sound/rain.wav";
 
@@ -52,17 +55,18 @@ shotSound.src = "resource/sound/gunShot.wav";
 
 //Variablen
 var anzeige, hudHead, hudFoot, pen;
-var lastTime, intervalRain, intervalUpdate, pause;
+var lastTime, lastTimeMenu, intervalRain, intervalUpdate, pause, pauseMenu;
 var switchFlag, stateRain, stateBack, over;
 var mouseX, mouseY;
 var karl, player;
 var score, guiScore, reactionEnemy, guiReactionEnemy, reactionPlayer, guiReactionPlayer;
 
+
 //Funktionen
-function initialisieren(){
+function menu(){
 	karl = new Gangster();
 	player = new Player();
-	
+		
 	anzeige = document.getElementById("anzeige");
 	hudFoot = document.getElementById("hudFoot");
 	hudHead = document.getElementById("hudHead");
@@ -70,10 +74,18 @@ function initialisieren(){
 	anzeige.addEventListener("click",player.shoot);
 	pen = anzeige.getContext("2d");
 	
+	mainSong.loop = true;
+	mainSong.play();
+	
+	window.requestAnimationFrame(tickMenu);
+}
+
+function initialisieren(){
 	stateRain = true;
 	switchFlag = true;
 	stateBack = false;
 	over = false;
+	player.setShow(false);
 	
 	pause = 0;
 	lastTime = 0;
@@ -155,7 +167,7 @@ function updateHud(){
 }
 
 function reactionTimer(){
-	if(player.show&&!over){
+	if(player.getShow()&&!over){
 		reactionPlayer += pause;
 	}
 	if(reactionPlayer>=reactionEnemy&&!over){
@@ -173,6 +185,16 @@ function basic(){
 		case true: pen.drawImage(background,0,0); break;
 		case false: pen.drawImage(backgroundTwo,0,0); break;
 	}
+}
+
+function drawMenu(){
+	pen.clearRect(0,0,768,432);
+	pen.font = "40pt pixel";
+    pen.fillStyle = "white";
+	pen.fillText("POLICE SHOWDOWN",115,100);
+	
+	pen.font = "25pt pixel";
+	pen.fillText("Spiel starten",250,180);
 }
 
 function raining(){
@@ -210,6 +232,20 @@ function tick(){
 	window.requestAnimationFrame(tick);
 }
 
+function tickMenu(){
+	var time = new Date();
+	pauseMenu = time.getTime() - lastTime;
+	lastTimeMenu = time.getTime();
+	
+	drawMenu();
+	
+	player.repoCross();
+	player.drawCross();
+	
+	window.requestAnimationFrame(tickMenu);
+}
+
 
 //Initialisierung
-initialisieren();
+menu();
+//initialisieren();

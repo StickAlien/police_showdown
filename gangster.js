@@ -46,7 +46,7 @@ function Gangster(){
 		if(this.drawInterval>=this.drawTime&&this.idle){
 			this.state = 3;
 			this.talk = 1;
-			player.show = true;
+			player.setShow(true);
 			drawSound.play();
 			this.idle = false;
 		}
@@ -54,7 +54,7 @@ function Gangster(){
 	
 	this.win = function(){
 		over = true;
-		player.show = false;
+		player.setShow(false);
 		
 		this.talk = 2;
 		shotSound.play();

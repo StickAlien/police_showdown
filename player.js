@@ -2,7 +2,7 @@ function Player(){
 	//Variablen
 	var posX = mouseX-33;
 	var posY = mouseY-36;
-	this.show = false;
+	var show = true;
 	var empty = false;
 	
 	
@@ -13,7 +13,7 @@ function Player(){
 	}
 	
 	this.drawCross = function(){
-		if(this.show){
+		if(show){
 			pen.drawImage(crosshair,posX,posY);
 		}
 	}
@@ -27,7 +27,7 @@ function Player(){
 	}	
 	
 	this.shoot = function(e){
-		if(!empty){
+		if(!empty&&show){
 			shotSound.play();
 			empty = true;
 			
@@ -37,5 +37,13 @@ function Player(){
 			var shootY = e.clientY-abstandY;
 			if(shootX>350&&shootX<443&&shootY>50&&shootY<261) win();
 		}
+	}
+	
+	this.getShow = function(){
+		return show;
+	}
+	
+	this.setShow = function(val){
+		show = val;
 	}
 }
