@@ -195,6 +195,10 @@ function drawMenu(){
 	
 	pen.font = "25pt pixel";
 	pen.fillText("Spiel starten",250,180);
+	
+	pen.fillText("Optionen",300,250);
+	
+	pen.fillText("Spiel beenden",250,320);
 }
 
 function raining(){
