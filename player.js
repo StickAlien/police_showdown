@@ -4,6 +4,7 @@ function Player(){
 	var posY = mouseY-36;
 	var show = true;
 	var empty = false;
+	this.iconState = 0; //Iconposition 0 = nicht da; 1 = Spiel starten; 2 = Optionen; 3 = Spiel beenden
 	
 	
 	//Funktionen
@@ -18,6 +19,14 @@ function Player(){
 		}
 	}
 	
+	this.drawMenuIcon = function(){
+		switch(this.iconState){
+			case 1: pen.drawImage(menuIcon,180,160); break;
+			case 2: pen.drawImage(menuIcon,180,230); break;
+			case 3: pen.drawImage(menuIcon,180,300); break;
+		}
+	}
+	
 	function win(){
 		over = true;
 		
@@ -27,7 +36,7 @@ function Player(){
 	}	
 	
 	this.shoot = function(e){
-		if(!empty&&show){
+		if(!empty&&show&&!menuScreen){
 			shotSound.play();
 			empty = true;
 			
@@ -36,6 +45,13 @@ function Player(){
 			var shootX = e.clientX-abstandX;
 			var shootY = e.clientY-abstandY;
 			if(shootX>350&&shootX<443&&shootY>50&&shootY<261) win();
+		}
+		else if(show&&menuScreen){
+			switch(player.iconState){
+				case 1: initialisieren(); break;
+				case 2: ; break;
+				case 3: ; break;
+			}
 		}
 	}
 	

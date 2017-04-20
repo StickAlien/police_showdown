@@ -14,6 +14,9 @@ rainTwo.src = "resource/texture/rainphase2scaled.png";
 var crosshair = document.createElement("img");
 crosshair.src = "resource/texture/crosshairscaled.png";
 
+var menuIcon = document.createElement("img");
+menuIcon.src = "resource/texture/punktscaled.png";
+
 var enemy = document.createElement("img");
 enemy.src = "resource/texture/gangster1scaled.png";
 
@@ -56,7 +59,7 @@ shotSound.src = "resource/sound/gunShot.wav";
 //Variablen
 var anzeige, hudHead, hudFoot, pen;
 var lastTime, lastTimeMenu, intervalRain, intervalUpdate, pause, pauseMenu;
-var switchFlag, stateRain, stateBack, over;
+var switchFlag, stateRain, stateBack, over, menuScreen;
 var mouseX, mouseY;
 var karl, player;
 var score, guiScore, reactionEnemy, guiReactionEnemy, reactionPlayer, guiReactionPlayer;
@@ -77,6 +80,8 @@ function menu(){
 	mainSong.loop = true;
 	mainSong.play();
 	
+	menuScreen = true;
+	
 	window.requestAnimationFrame(tickMenu);
 }
 
@@ -85,7 +90,10 @@ function initialisieren(){
 	switchFlag = true;
 	stateBack = false;
 	over = false;
+	
+	menuScreen = false;
 	player.setShow(false);
+	mainSong.pause();
 	
 	pause = 0;
 	lastTime = 0;
@@ -155,6 +163,7 @@ function getCoord(e){
 	var abstandY = anzeige.offsetTop;
 	mouseX = e.clientX-abstandX;
 	mouseY = e.clientY-abstandY;
+	//console.log("X: "+mouseX+"		Y: "+mouseY);
 }
 
 function updateHud(){
@@ -163,6 +172,21 @@ function updateHud(){
 		guiScore.innerHTML = "SCORE:"+score;
 		guiReactionPlayer.innerHTML = "TIME:"+reactionPlayer/1000;
 		intervalUpdate = 0;
+	}
+}
+
+function repoMenuIcon(){
+	if(mouseX>=115&&mouseX<=650&&mouseY>=145&&mouseY<=209){
+		player.iconState = 1;
+	}
+	else if(mouseX>=115&&mouseX<=650&&mouseY>=210&&mouseY<=279){
+		player.iconState = 2;
+	}
+	else if(mouseX>=115&&mouseX<=650&&mouseY>=280&&mouseY<=330){
+		player.iconState = 3;
+	}
+	else{
+		player.iconState = 0;
 	}
 }
 
@@ -245,11 +269,12 @@ function tickMenu(){
 	
 	player.repoCross();
 	player.drawCross();
+	repoMenuIcon();
+	player.drawMenuIcon();
 	
-	window.requestAnimationFrame(tickMenu);
+	if(menuScreen) window.requestAnimationFrame(tickMenu);
 }
 
 
 //Initialisierung
 menu();
-//initialisieren();
